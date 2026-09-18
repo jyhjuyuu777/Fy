@@ -1795,7 +1795,7 @@ SelectBox:AddDropdown("option", {
 -- DROPDOWN 2
 --==================================================
 
-optionBox:AddDropdown("option", {
+SelectBox:AddDropdown("option", {
     Values = {
         "Easy",
         "Normal",
@@ -1819,7 +1819,7 @@ optionBox:AddDropdown("option", {
 -- AUTO JOIN
 --==================================================
 
-optionBox:AddToggle("option", {
+SelectBox:AddToggle("option", {
     Text = "Auto Join",
     Default = false,
 
