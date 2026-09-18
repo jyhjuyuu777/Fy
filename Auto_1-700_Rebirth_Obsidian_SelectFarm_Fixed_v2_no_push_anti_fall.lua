@@ -1739,9 +1739,9 @@ local StartDungeon =
 --==================================================
 
 
-local Tab2 = Window:AddTab("Dungeon", "Select")
+local Tab1 = Window:AddTab("Dungeon", "option")
 
-local SelectBox = Tab2:AddLeftGroupbox("Select")
+local SelectBox = Tab1:AddLeftGroupbox("option")
 
 
 --==================================================
@@ -1771,7 +1771,7 @@ local DifficultyID = {
 -- DROPDOWN 1
 --==================================================
 
-SelectBox2:AddDropdown("Select", {
+SelectBox1:AddDropdown("option", {
     Values = {
         "Mecha",
         "Atom",
@@ -1795,7 +1795,7 @@ SelectBox2:AddDropdown("Select", {
 -- DROPDOWN 2
 --==================================================
 
-SelectBox2:AddDropdown("Select", {
+optionBox1:AddDropdown("option", {
     Values = {
         "Easy",
         "Normal",
@@ -1819,7 +1819,7 @@ SelectBox2:AddDropdown("Select", {
 -- AUTO JOIN
 --==================================================
 
-SelectBox2:AddToggle("auto join", {
+optionBox1:AddToggle("option", {
     Text = "Auto Join",
     Default = false,
 
