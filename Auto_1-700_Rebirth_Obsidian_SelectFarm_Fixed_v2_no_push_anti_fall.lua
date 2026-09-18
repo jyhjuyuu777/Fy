@@ -1708,3 +1708,257 @@ RightBox:AddToggle("SelectAutoFarm", {
     end
 })
 
+--// OBSIDIAN - AUTO JOIN DUNGEON
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Knit =
+    ReplicatedStorage
+    :WaitForChild("Packages")
+    :WaitForChild("_Index")
+    :WaitForChild("sleitnick_knit@1.4.7")
+    :WaitForChild("knit")
+
+local DungeonLobbyService =
+    Knit:WaitForChild("Services")
+    :WaitForChild("DungeonLobbyService")
+
+local CreateLobby =
+    DungeonLobbyService
+    :WaitForChild("RF")
+    :WaitForChild("CreateLobby")
+
+local StartDungeon =
+    DungeonLobbyService
+    :WaitForChild("RF")
+    :WaitForChild("StartDungeon")
+
+
+--==================================================
+-- OBSIDIAN
+--==================================================
+
+
+local Tab2 = Window:AddTab("Dungeon", "Raid")
+
+local Box = Tab2:AddLeftGroupbox("Select")
+
+
+--==================================================
+-- CONFIG
+--==================================================
+
+local SelectedMode = "Mecha"
+local SelectedDifficulty = "Easy"
+local AutoJoin = false
+
+local ModeID = {
+    Mecha = 1,
+    Atom = 2,
+    Droid = 3,
+    Hideout = 4
+}
+
+local DifficultyID = {
+    Easy = 1,
+    Normal = 2,
+    Hard = 3,
+    Hell = 4
+}
+
+
+--==================================================
+-- DROPDOWN 1
+--==================================================
+
+Box2:AddDropdown("Select", {
+    Values = {
+        "Mecha",
+        "Atom",
+        "Droid",
+        "Hideout"
+    },
+
+    Default = "Mecha",
+
+    Multi = false,
+
+    Text = "Choose Mode",
+
+    Callback = function(Value)
+        SelectedMode = Value
+    end
+})
+
+
+--==================================================
+-- DROPDOWN 2
+--==================================================
+
+Box2:AddDropdown("Select", {
+    Values = {
+        "Easy",
+        "Normal",
+        "Hard",
+        "Hell"
+    },
+
+    Default = "Easy",
+
+    Multi = false,
+
+    Text = "Choose Difficulty",
+
+    Callback = function(Value)
+        SelectedDifficulty = Value
+    end
+})
+
+
+--==================================================
+-- AUTO JOIN
+--==================================================
+
+Box2:AddToggle("auto join", {
+    Text = "Auto Join",
+    Default = false,
+
+    Callback = function(Value)
+
+        AutoJoin = Value
+
+        if not Value then
+            return
+        end
+
+        task.spawn(function()
+
+            while AutoJoin do
+
+                --==========================================
+                -- ID
+                --==========================================
+
+                local DungeonId =
+                    ModeID[SelectedMode]
+
+                local Difficulty =
+                    DifficultyID[SelectedDifficulty]
+
+
+                --==========================================
+                -- CREATE LOBBY
+                --==========================================
+
+                local args = {
+                    [1] = {
+                        ["DungeonIdSelected"] = DungeonId,
+
+                        ["DungeonStats"] = {
+                            ["Difficulty"] = Difficulty
+                        }
+                    }
+                }
+
+
+                local success, result =
+                    pcall(function()
+
+                        return CreateLobby:InvokeServer(
+                            unpack(args)
+                        )
+
+                    end)
+
+
+                if success then
+
+                    print(
+                        "✅ CreateLobby:",
+                        result
+                    )
+
+                else
+
+                    warn(
+                        "❌ CreateLobby Error:",
+                        result
+                    )
+
+                end
+
+
+                --==========================================
+                -- WAIT 10 SECONDS
+                --==========================================
+
+                for i = 10, 1, -1 do
+
+                    if not AutoJoin then
+                        return
+                    end
+
+                    print(
+                        "⏳ Start Dungeon sau",
+                        i,
+                        "giây..."
+                    )
+
+                    task.wait(1)
+
+                end
+
+
+                if not AutoJoin then
+                    return
+                end
+
+
+                --==========================================
+                -- START DUNGEON
+                --==========================================
+
+                local startSuccess, startResult =
+                    pcall(function()
+
+                        -- Dùng cùng dungeon settings
+                        return StartDungeon:InvokeServer(
+                            unpack(args)
+                        )
+
+                    end)
+
+
+                if startSuccess then
+
+                    print(
+                        "🚀 StartDungeon:",
+                        startResult
+                    )
+
+                else
+
+                    warn(
+                        "❌ StartDungeon Error:",
+                        startResult
+                    )
+
+                end
+
+
+                -- Chờ một chút trước vòng tiếp theo
+                task.wait(1)
+
+            end
+
+        end)
+
+    end
+})
+
+
+Library:Notify({
+    Title = "Dungeon Auto Join",
+    Description = "Đã load!",
+    Time = 3
+})
