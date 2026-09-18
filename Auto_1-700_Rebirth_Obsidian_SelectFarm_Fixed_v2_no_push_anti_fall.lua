@@ -1771,7 +1771,7 @@ local DifficultyID = {
 -- DROPDOWN 1
 --==================================================
 
-SelectBox1:AddDropdown("option", {
+SelectBox:AddDropdown("option", {
     Values = {
         "Mecha",
         "Atom",
@@ -1795,7 +1795,7 @@ SelectBox1:AddDropdown("option", {
 -- DROPDOWN 2
 --==================================================
 
-optionBox1:AddDropdown("option", {
+optionBox:AddDropdown("option", {
     Values = {
         "Easy",
         "Normal",
@@ -1819,7 +1819,7 @@ optionBox1:AddDropdown("option", {
 -- AUTO JOIN
 --==================================================
 
-optionBox1:AddToggle("option", {
+optionBox:AddToggle("option", {
     Text = "Auto Join",
     Default = false,
 
