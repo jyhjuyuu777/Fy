@@ -1739,9 +1739,9 @@ local StartDungeon =
 --==================================================
 
 
-local Tab2 = Window:AddTab("Dungeon", "Raid")
+local Tab2 = Window:AddTab("Dungeon", "Select")
 
-local Box = Tab2:AddLeftGroupbox("Select")
+local SelectBox = Tab2:AddLeftGroupbox("Select")
 
 
 --==================================================
