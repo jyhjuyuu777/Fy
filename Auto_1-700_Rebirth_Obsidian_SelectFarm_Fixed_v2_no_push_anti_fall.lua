@@ -2095,7 +2095,7 @@ end)
 
 
 
-local Box = Tab2:AddRightGroupbox(
+local Box = Tab1:AddRightGroupbox(
     "Skill"
 )
 
