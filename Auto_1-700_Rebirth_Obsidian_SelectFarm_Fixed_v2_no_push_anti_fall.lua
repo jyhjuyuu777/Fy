@@ -1962,3 +1962,205 @@ Library:Notify({
     Description = "Đã load!",
     Time = 3
 })
+--// =========================================
+--// AUTO SKILL - OBSIDIAN
+--// =========================================
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local SkillRemote = ReplicatedStorage
+    :WaitForChild("Remotes")
+    :WaitForChild("SkillRemote")
+
+local AutoSkillEnabled = false
+
+--// =========================================
+--// SKILL ID
+--// =========================================
+
+local SkillIDs = {
+    ["Orange supernova"] = "113",
+    ["Enenry boom"] = "104",
+    ["Tri beam"] = "117",
+    ["Stardust breaker"] = "116",
+    ["Final enenry wave"] = "111",
+    ["Blast first"] = "107",
+    ["Enenry blast"] = "101",
+    ["Death beam"] = "106",
+
+    ["Death cannon"] = "109",
+    ["Hellzone ge"] = "112",
+    ["Shock wave blast"] = "115",
+    ["Destructo disc"] = "128"
+}
+
+local SelectedSkills = {
+    ["Orange supernova"] = true
+}
+
+--// =========================================
+--// FIRE SKILL
+--// =========================================
+
+local function FireSkill(SkillId, Began)
+
+    local args = {
+        [1] = {
+            ["Camera"] = CFrame.new(
+                -527.6297607421875,
+                1399.5377197265625,
+                -169.34072875976562,
+                -0.4275974631309509,
+                0.5169754028320312,
+                -0.7415503263473511,
+                0,
+                0.8203269839286804,
+                0.5718948841094971,
+                0.9039692878723145,
+                0.24454079568386078,
+                -0.35076969861984253
+            ),
+
+            ["SkillId"] = SkillId,
+
+            ["Began"] = Began,
+
+            ["CFrame"] = CFrame.new(
+                -468.1554870605469,
+                1351.9703369140625,
+                -141.20806884765625,
+                -0.9905334711074829,
+                5.653752666034961e-08,
+                0.1372712403535843,
+                6.362779458868317e-08,
+                1,
+                4.726363656004651e-08,
+                -0.1372712403535843,
+                5.555047977168215e-08,
+                -0.9905334711074829
+            ),
+
+            ["Typ\208\181"] = 1,
+
+            ["Aim"] = Vector3.new(
+                -475.01904296875,
+                1351.9703369140625,
+                -91.681396484375
+            )
+        }
+    }
+
+    SkillRemote:FireServer(unpack(args))
+end
+
+--// =========================================
+--// AUTO SKILL LOOP
+--// =========================================
+
+task.spawn(function()
+
+    while task.wait(0.05) do
+
+        if AutoSkillEnabled then
+
+            for SkillName, Enabled in pairs(SelectedSkills) do
+
+                if Enabled then
+
+                    local SkillId = SkillIDs[SkillName]
+
+                    if SkillId then
+
+                        --// BEGIN
+                        FireSkill(SkillId, true)
+
+                        task.wait(0.05)
+
+                        --// END
+                        FireSkill(SkillId, false)
+
+                        task.wait(0.05)
+
+                    end
+                end
+            end
+        end
+    end
+
+end)
+
+--// =========================================
+--// LOAD OBSIDIAN
+--// =========================================
+
+
+
+local Box = Tab2:AddRightGroupbox(
+    "Skill"
+)
+
+--// =========================================
+--// AUTO SKILL DROPDOWN
+--// =========================================
+
+Box:AddDropdown("AutoSkill", {
+
+    Values = {
+        "Orange supernova",
+        "Enenry boom",
+        "Tri beam",
+        "Stardust breaker",
+        "Final enenry wave",
+        "Blast first",
+        "Enenry blast",
+        "Death beam",
+        "Death cannon",
+        "Hellzone ge",
+        "Shock wave blast",
+        "Destructo disc"
+    },
+
+    Default = {
+        "Orange supernova"
+    },
+
+    Multi = true,
+
+    Text = "Auto skill",
+
+    Callback = function(Value)
+
+        SelectedSkills = {}
+
+        for SkillName, Enabled in pairs(Value) do
+
+            if Enabled then
+                SelectedSkills[SkillName] = true
+            end
+
+        end
+
+    end
+})
+
+--// =========================================
+--// ON / OFF
+--// =========================================
+
+Box:AddToggle("AutoSkillToggle", {
+
+    Text = "Auto skill",
+
+    Default = false,
+
+    Callback = function(Value)
+
+        AutoSkillEnabled = Value
+
+        print(
+            "[Auto Skill]",
+            Value and "ON" or "OFF"
+        )
+
+    end
+})
