@@ -1008,6 +1008,395 @@ Box:AddDropdown("ToolbarNumber", {
         StartToolbar()
     end
 })
+
+
+
+local NPC = workspace
+    :WaitForChild("Misc")
+    :WaitForChild("NPC")
+    :WaitForChild("Main")
+    :WaitForChild("KaiokenTrainerNPC")
+
+--// =========================================
+--// SERVICES
+--// =========================================
+
+local Packages = ReplicatedStorage
+    :WaitForChild("Packages")
+    :WaitForChild("_Index")
+    :WaitForChild("sleitnick_knit@1.4.7")
+    :WaitForChild("knit")
+    :WaitForChild("Services")
+
+local InventoryService = Packages
+    :WaitForChild("InventoryService")
+    :WaitForChild("RF")
+
+local DialogService = Packages
+    :WaitForChild("DialogService")
+    :WaitForChild("RF")
+
+local ChangeEquipmentRequest =
+    InventoryService:WaitForChild("ChangeEquipmentRequest")
+
+local Answer =
+    DialogService:WaitForChild("Answer")
+
+local SkillRemote =
+    ReplicatedStorage
+    :WaitForChild("Remotes")
+    :WaitForChild("SkillRemote")
+
+--// =========================================
+--// SETTINGS
+--// =========================================
+
+local AutoFarmKaioken = false
+
+--// =========================================
+--// CHARACTER
+--// =========================================
+
+local function GetRoot()
+
+    local Character = LP.Character
+
+    if not Character then
+        Character = LP.CharacterAdded:Wait()
+    end
+
+    return Character:WaitForChild("HumanoidRootPart")
+end
+
+--// =========================================
+--// TELEPORT NPC
+--// =========================================
+
+local function TeleportToNPC()
+
+    local Root = GetRoot()
+
+    if NPC:IsA("BasePart") then
+        Root.CFrame = NPC.CFrame
+        return
+    end
+
+    local Part =
+        NPC:FindFirstChild("HumanoidRootPart")
+        or NPC:FindFirstChild("Head")
+        or NPC:FindFirstChildWhichIsA("BasePart")
+
+    if Part then
+        Root.CFrame = Part.CFrame * CFrame.new(0, 0, 3)
+    end
+end
+
+--// =========================================
+--// PROXIMITY PROMPT
+--// =========================================
+
+local function ActivatePrompts()
+
+    for _, Obj in ipairs(NPC:GetDescendants()) do
+
+        if Obj:IsA("ProximityPrompt") then
+
+            pcall(function()
+                fireproximityprompt(Obj)
+            end)
+
+        end
+
+    end
+end
+
+--// =========================================
+--// EQUIPMENT - 21 GIÂY
+--// =========================================
+
+local function EquipmentLoop()
+
+    local EndTime = os.clock() + 21
+
+    while AutoFarmKaioken
+        and os.clock() < EndTime do
+
+        pcall(function()
+
+            ChangeEquipmentRequest:InvokeServer(
+                "Technique",
+                "3",
+                false
+            )
+
+        end)
+
+        task.wait()
+
+    end
+end
+
+--// =========================================
+--// DIALOG KAIoken
+--// =========================================
+
+local function DialogKaioken()
+
+    if not AutoFarmKaioken then
+        return
+    end
+
+    pcall(function()
+
+        Answer:InvokeServer(
+            "TechniqueKaiokenGiver",
+            3,
+            NPC
+        )
+
+    end)
+
+    task.wait(0.1)
+
+    if not AutoFarmKaioken then
+        return
+    end
+
+    pcall(function()
+
+        Answer:InvokeServer(
+            "TechniqueKaiokenGiver",
+            1,
+            NPC
+        )
+
+    end)
+end
+
+--// =========================================
+--// SKILL 8
+--// =========================================
+
+local function Skill8()
+
+    local args = {
+        [1] = {
+            ["Camera"] = CFrame.new(
+                1409.6197509765625,
+                604.72265625,
+                -2978.0595703125,
+                0.2104930877685547,
+                -0.577901303768158,
+                0.7884939312934875,
+                0,
+                0.8065647482872009,
+                0.5911457538604736,
+                -0.977595329284668,
+                -0.12443209439516068,
+                0.1697763055562973
+            ),
+
+            ["SkillId"] = "8",
+
+            ["Typ\208\181"] = 1,
+
+            ["CFrame"] = CFrame.new(
+                1399.685302734375,
+                595.57470703125,
+                -2980.19873046875,
+                0.44990572333335876,
+                1.9449789334657908e-08,
+                0.8930760622024536,
+                -3.5139443355092226e-08,
+                1,
+                -4.076194493052299e-09,
+                -0.8930760622024536,
+                -2.954829447787688e-08,
+                0.44990572333335876
+            ),
+
+            ["Began"] = true,
+
+            ["Aim"] = Vector3.new(
+                1355.031494140625,
+                595.57470703125,
+                -3002.694091796875
+            )
+        }
+    }
+
+    SkillRemote:FireServer(unpack(args))
+end
+
+--// =========================================
+--// SKILL 1
+--// =========================================
+
+local function Skill1()
+
+    local args = {
+        [1] = {
+            ["Camera"] = CFrame.new(
+                1388.31298828125,
+                597.3091430664062,
+                -2985.62158203125,
+                -0.43041837215423584,
+                0.0024670681450515985,
+                -0.9026261568069458,
+                0,
+                0.9999962449073792,
+                0.002733201254159212,
+                0.9026294946670532,
+                0.001176420145574,
+                -0.4304167926311493
+            ),
+
+            ["SkillId"] = "1",
+
+            ["Began"] = true,
+
+            ["CFrame"] = CFrame.new(
+                1399.685302734375,
+                595.57470703125,
+                -2980.19873046875,
+                0.44990572333335876,
+                4.983716195283705e-08,
+                0.8930760622024536,
+                -9.002672385349797e-08,
+                1,
+                -1.0451095100449947e-08,
+                -0.8930760622024536,
+                -7.569870774659648e-08,
+                0.44990572333335876
+            ),
+
+            ["Typ\208\181"] = 1,
+
+            ["Aim"] = Vector3.new(
+                1355.031494140625,
+                595.57470703125,
+                -3002.694091796875
+            )
+        }
+    }
+
+    SkillRemote:FireServer(unpack(args))
+end
+
+--// =========================================
+--// AUTO FARM LOOP
+--// =========================================
+
+local FarmThread = nil
+
+local function StartAutoFarm()
+
+    if FarmThread then
+        return
+    end
+
+    FarmThread = task.spawn(function()
+
+        --// EQUIPMENT 21 GIÂY
+        task.spawn(function()
+            EquipmentLoop()
+        end)
+
+        --// DIALOG
+        task.spawn(function()
+            DialogKaioken()
+        end)
+
+        --// FARM
+        while AutoFarmKaioken do
+
+            --// TELEPORT NPC
+            pcall(function()
+                TeleportToNPC()
+            end)
+
+            --// SKILL 8
+            pcall(function()
+                Skill8()
+            end)
+
+            --// SKILL 1
+            pcall(function()
+                Skill1()
+            end)
+
+            task.wait()
+
+        end
+
+        FarmThread = nil
+
+    end)
+end
+
+--// =========================================
+--// TELEPORT + PROMPT LOOP
+--// =========================================
+
+local PromptThread = nil
+
+local function StartPromptLoop()
+
+    if PromptThread then
+        return
+    end
+
+    PromptThread = task.spawn(function()
+
+        while AutoFarmKaioken do
+
+            pcall(function()
+                TeleportToNPC()
+            end)
+
+            task.wait(10)
+
+            if not AutoFarmKaioken then
+                break
+            end
+
+            pcall(function()
+                TeleportToNPC()
+                ActivatePrompts()
+            end)
+
+        end
+
+        PromptThread = nil
+
+    end)
+end
+
+--// =========================================
+--// TOGGLE
+--// =========================================
+
+Box:AddToggle("AutoFarm", {
+
+    Text = "Auto Farm Kaioken",
+
+    Default = false,
+
+    Callback = function(Value)
+
+        AutoFarmKaioken = Value
+
+        if Value then
+
+            StartAutoFarm()
+            StartPromptLoop()
+
+        end
+
+    end
+})
+
+
 local BasicBox = Tab:AddRightGroupbox("Basic")
 
 local Players = game:GetService("Players")
